@@ -92,7 +92,7 @@ void deQueue(struct Queue* q) {
 }
 
 /*
- * Pushes a node with the key to the stack.
+ * Pushes a node with the key to the top of the stack.
  */
 void push(struct Stack* s, int key) {
     // Create a node
@@ -109,13 +109,24 @@ void push(struct Stack* s, int key) {
 }
 
 /*
- * Pops a node off of the stack.
+ * Pops the top node off of the stack.
  */
 void pop(struct Stack* s) {
+    // make sure stack isn't empty
+    if (s->top == NULL)
+        return;
 
+    // Get the top of the stack
+    struct Node* newNode = s->top;
+
+    // Move the top of te stack to next node
+    s->top = newNode->next;
+
+    // Free the memory
+    free(newNode);
 }
 
-void printList(struct Node *node)
+void printLinkedList(struct Node *node)
 {
     while (node != NULL)
     {
@@ -125,7 +136,7 @@ void printList(struct Node *node)
 }
 
 void printQueue(struct Queue *queue) {
-    printf(" %s", "Started printing queue");
+    printf(" %s\n", "-----");
     struct Node* currNode = queue->start;
     while (currNode != NULL) {
         printf(" %d", currNode->key);
@@ -133,24 +144,51 @@ void printQueue(struct Queue *queue) {
     }
 }
 
-int main() {
+void printStack(struct Stack *stack) {
+    printf(" %s\n", "-----");
+    struct Node* currNode = stack->top;
+    while (currNode != NULL) {
+        printf(" %d", currNode->key);
+        currNode = currNode->next;
+    }
+}
+
+void testQueue() {
     struct Queue* queue = createQueue();
-    enQueue(queue, 1);
-    enQueue(queue, 2);
-    enQueue(queue, 3);
-    enQueue(queue, 4);
-    enQueue(queue, 5);
-    enQueue(queue, 6);
+    int i;
+    for(i = 0; i < 6; i = i + 1 ){
+        enQueue(queue, i+1);
+    }
     printQueue(queue);
-    deQueue(queue);
-    deQueue(queue);
-    deQueue(queue);
-    deQueue(queue);
-    deQueue(queue);
-    deQueue(queue);
+
+    for(i = 0; i < 6; i = i + 1 ){
+        deQueue(queue);
+    }
     printQueue(queue);
     enQueue(queue, 1);
     enQueue(queue, 2);
     printQueue(queue);
+}
+
+void testStack() {
+    struct Stack* stack = createStack();
+    int i;
+    for(i = 0; i < 6; i = i + 1 ){
+        push(stack, i+1);
+    }
+    printStack(stack);
+
+    for(i = 0; i < 6; i = i + 1 ){
+        pop(stack);
+    }
+    printStack(stack);
+    push(stack, 1);
+    push(stack, 2);
+    printStack(stack);
+}
+
+int main() {
+    testQueue();
+    testStack();
     return 0;
 }
